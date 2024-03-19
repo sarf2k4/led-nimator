@@ -40,4 +40,3 @@ uint8_t ledpwr = 1;   //1 being on
 
 #define COLOUR_WIPE_DELAYS 5
 #define LED_BRIGHTNESS (0.15 * 255)
-
