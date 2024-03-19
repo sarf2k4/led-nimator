@@ -1,6 +1,7 @@
 ;
 #include "configs.h"
 #include "pinouts.h"
+#include "cols.h"
 #include "vars.h"
 
 #ifdef USE_EEPROM
