@@ -2,7 +2,7 @@
 // #define PINK
 // #define YELLOW
 // #define BLUE
-// #define CUSTOM_COLOUR //set custom colour at vars.h
+// #define CUSTOM_COLOUR //set custom colour at cols.h
 
 //only works if all above are commented
 //#define SEIZURE_INDUCER
@@ -40,3 +40,4 @@ uint8_t ledpwr = 1;   //1 being on
 
 #define COLOUR_WIPE_DELAYS 5
 #define LED_BRIGHTNESS (0.15 * 255)
+
