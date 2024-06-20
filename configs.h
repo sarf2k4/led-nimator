@@ -4,9 +4,6 @@
 // #define BLUE
 // #define CUSTOM_COLOUR //set custom colour at cols.h
 
-//only works if all above are commented
-//#define SEIZURE_INDUCER
-
 #if defined(PINK) || defined(YELLOW) || defined(BLUE) || defined(CUSTOM_COLOUR)
 #define FIXED_COLOUR
 #endif
@@ -24,7 +21,7 @@ uint8_t ledpwr = 1;   //1 being on
 #define USE_EEPROM  //this is to retain current mode even after power cycle
 #endif
 //#define COLOUR_WIPE_TEST //Will have individual RGB wipe test every startup
-//#define COLOUR_WIPE_STARTUP //Will wipe into colour every startup
+#define COLOUR_WIPE_STARTUP //Will wipe into colour every startup
 // #define LEGACY_CODES //Older codes; More flash memory, lesser dynamic memory [deprecated]
 
 #define EXTRA_LED  //Extra LED to be attached

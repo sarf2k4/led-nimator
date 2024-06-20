@@ -160,6 +160,11 @@ void ledModes() {
         // rainbowCycle();
         timedRandom();
         break;
+      case 29: // Seizure inducer
+        // rainbowCycle();
+        RandColour();
+        ledOn();
+        break;
 #if !defined(ARDUINO_AVR_DIGISPARKPRO) && defined(EXTRA_MODES)
       case 8:
         FireShows();
