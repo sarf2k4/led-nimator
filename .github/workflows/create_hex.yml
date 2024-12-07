@@ -75,6 +75,7 @@ jobs:
         with:
           tag_name: ${{ env.tag }}
           name: "Release ${{ env.tag }}"
+          body: "HEX auto generated from action worklows."
           files: ./download/**/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
