@@ -48,9 +48,6 @@ jobs:
           
       - name: List Output Directory 
         run: ls -R ./build_*
-
-      - name: Checkout code 
-        uses: actions/checkout@v4
       
       - name: Download HEX Files
         uses: actions/download-artifact@v4
