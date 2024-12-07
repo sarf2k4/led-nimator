@@ -21,12 +21,14 @@ jobs:
       - name: Install MiniCore Package
         run: |
           arduino-cli core install MiniCore:avr --additional-urls https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json
+          
       - name: Install Libraries
         run: |
           arduino-cli lib install "OneButton"
           arduino-cli lib install "EasyColor"
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
+          
       - name: Compile Configurations
         run: |
           COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
@@ -69,6 +71,6 @@ jobs:
         with:
           tag_name: ${{ steps.create_tag.outputs.tag }}
           name: "Release ${{ steps.create_tag.outputs.tag }}"
-          files: ./downloaded/**/*.hex
+          files: ./download/**/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
