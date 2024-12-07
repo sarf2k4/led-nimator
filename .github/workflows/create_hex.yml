@@ -66,11 +66,12 @@ jobs:
       - name: List Downloaded Artifact Directory
         run: ls -R ./download
 
-      - name: Create Release
+      - name: Create Tag and Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build.outputs.tag }}
-          name: "Release $(date +%Y-%m-%d %H:%M:%S)"
           files: ./downloaded/**/*.hex
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
