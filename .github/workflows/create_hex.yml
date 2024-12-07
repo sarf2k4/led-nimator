@@ -73,8 +73,6 @@ jobs:
         with:
           tag: ${{ github.sha }}
           title: "Release ${{ github.sha }}"
-          body: "Automated release of HEX files for different configurations."
-          draft: true
           prerelease: false
           workdir: ./download/**/*.hex
 
