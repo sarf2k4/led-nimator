@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Check out the repository code
+        uses: actions/checkout@v4  # Check out the repository code
 
       - name: Set up Arduino CLI
-        uses: arduino/setup-arduino-cli@v4
+        uses: arduino/setup-arduino-cli@v2
 
       - name: Update Arduino CLI Core Index
         run: arduino-cli core update-index
