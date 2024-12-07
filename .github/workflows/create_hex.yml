@@ -76,8 +76,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.md5 }}
-          release_name: "Release ${{ github.md5 }}"
+          tag_name: "release-$(date +%Y%m%d%H%M%S)"
+          release_name: "Release $(date +%Y-%m-%d %H:%M:%S)"
           body: "Automated release of HEX files for different configurations."
           draft: false
           prerelease: false
@@ -88,6 +88,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./downloaded/**/*.hex
-          asset_name: blink_${{ github.sha }}.hex
+          asset_path: ./artifacts/**/*.hex
+          asset_name: *$(date +%Y%m%d%H%M%S).hex
           asset_content_type: application/octet-stream
