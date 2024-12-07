@@ -77,3 +77,13 @@ jobs:
           draft: true
           prerelease: false
           files: ./download/**/*.hex
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./downloaded/**/*.hex
+          asset_name: "blink_$(date +%Y%m%d-%H%M%S).hex"
+          asset_content_type: application/octet-stream
