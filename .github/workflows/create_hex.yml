@@ -29,7 +29,8 @@ jobs:
           arduino-cli lib install "EasyColor"
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
-          
+          arduino-cli lib install "NoDelay"
+
       - name: Compile Hex
         run: |
           COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
