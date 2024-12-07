@@ -1,4 +1,4 @@
-name: Build, Upload, and Commit HEX Files
+name: Create and Release HEX
 
 on:
   push: {}  # Trigger workflow on push to any branch
