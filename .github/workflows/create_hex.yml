@@ -70,12 +70,24 @@ jobs:
           echo "Listing output directory contents:"
           ls -R ./artifacts
 
-      - name: Commit and Push HEX Files
-        run: |
-          mkdir -p hex_files
-          cp ./artifacts/**/*.hex ./hex_files/
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add ./hex_files/*.hex
-          git commit -m "Add HEX files"
-          git push origin HEAD:${{ github.ref }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: "Release ${{ github.sha }}"
+          body: "Automated release of HEX files for different configurations."
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./downloaded/**/*.hex
+          asset_name: blink_${{ github.sha }}.hex
+          asset_content_type: application/octet-stream
