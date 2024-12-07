@@ -29,15 +29,15 @@ jobs:
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
           
-      # - name: Compile UNO Board
-        # run: |
-          # COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
-          # for colour in ${COLOURS[@]}; do
-            ## Compile the sketch with the defined option and internal oscillator settings
-            # arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
-            ## Rename the HEX file based on the configuration option
-            # mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
-          # done
+      - name: Compile UNO Board
+        run: |
+          COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
+          for colour in ${COLOURS[@]}; do
+            # Compile the sketch with the defined option and internal oscillator settings
+            arduino-cli compile --fqbn arduino:avr:uno  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
+            # Rename the HEX file based on the configuration option
+            mv ./build/led-nimator.ino.hex ./build/led-nimator_uno_$colour.hex
+          done
           
       - name: Compile Minicore
         run: |
