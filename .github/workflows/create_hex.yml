@@ -76,9 +76,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "release-"
-          release_name: "Release"
-          body: "Automated release of HEX files for different configurations."
+          tag_name: release-
+          release_name: elease
+          body: Automated release of HEX files for different configurations.
           draft: false
           prerelease: false
 
