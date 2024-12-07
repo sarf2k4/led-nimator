@@ -1,0 +1,81 @@
+name: Build, Upload, and Commit HEX Files
+
+on:
+  push: {}  # Trigger workflow on push to any branch
+  workflow_dispatch:  # Add this line to enable manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # Check out the repository code
+
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Update Arduino CLI Core Index
+        run: arduino-cli core update-index
+
+      - name: Install MiniCore Package
+        run: |
+          arduino-cli core install MiniCore:avr --additional-urls https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json
+          
+      - name: Install Libraries
+        run: |
+          arduino-cli lib install "OneButton"
+          arduino-cli lib install "EasyColor"
+          arduino-cli lib install "Adafruit NeoPixel"
+          arduino-cli lib install "VolAnalyzer"
+          
+      - name: Compile Configurations
+        run: |
+          COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
+          for colour in ${COLOURS[@]}; do
+            # Compile the sketch with the defined option and internal oscillator settings
+            arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
+            # Rename the HEX file based on the configuration option
+            mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
+          done
+          
+      - name: List Output Directory 
+        run: ls -R ./build_*
+
+      - name: Upload HEX Files to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: HEX Files
+          path: ./build_*/*.hex
+          
+      - name: List Output Directory 
+        run: ls -R ./build_*
+      
+      - name: Download HEX Files
+        uses: actions/download-artifact@v4
+        with:
+          name: HEX Files
+          path: ./download
+
+      - name: Exclude bootloader.hex
+        run: |
+          find ./download/**/ -name "*bootloader.hex" -exec rm -f {} \;
+
+      - name: List Downloaded Artifact Directory
+        run: ls -R ./download
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          tag="v$(date +%Y%m%d%H%M%S)"
+          echo "tag=$tag" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.tag }}
+          name: "Release ${{ env.tag }}"
+          files: ./download/**/*.hex
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
