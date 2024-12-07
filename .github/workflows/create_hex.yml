@@ -46,7 +46,7 @@ jobs:
             mv ./build/led-nimator.ino.hex ./build/led-nimator_minicore_$colour.hex
             
             # Compile the sketch with the defined option and internal oscillator settings
-            arduino-cli compile --fqbn arduino:avr:uno  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
+            arduino-cli compile --fqbn arduino:avr:uno  --build-property build.extra_flags=-D$colour --output-dir ./build led-nimator.ino
             # Rename the HEX file based on the configuration option
             mv ./build/led-nimator.ino.hex ./build/led-nimator_uno_$colour.hex
           done
