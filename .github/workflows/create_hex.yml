@@ -74,11 +74,23 @@ jobs:
           find ./download -type f -name "*.hex"
 
       - name: Create Release
-        uses: elgohr/Github-Release-Action@v5
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: "Release ${{ github.sha }}"
-          tag: test
-          workdir: ./download/**/*.hex
+          tag_name: ${{ github.sha }}
+          release_name: "Release ${{ github.sha }}"
+          body: "Automated release of HEX files for different configurations."
           draft: true
+          prerelease: false
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./download/**/*.hex
+          asset_name: blink_${{ github.sha }}.hex
+          asset_content_type: application/octet-stream
+
