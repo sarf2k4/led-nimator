@@ -1,4 +1,5 @@
 ;
+#include "libs.h"
 #include "configs.h"
 #include "pinouts.h"
 #include "cols.h"

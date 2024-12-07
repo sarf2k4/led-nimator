@@ -29,27 +29,37 @@ jobs:
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
           
-      - name: Compile Configurations
+      # - name: Compile UNO Board
+        # run: |
+          # COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
+          # for colour in ${COLOURS[@]}; do
+            ## Compile the sketch with the defined option and internal oscillator settings
+            # arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
+            ## Rename the HEX file based on the configuration option
+            # mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
+          # done
+          
+      - name: Compile Minicore
         run: |
           COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
           for colour in ${COLOURS[@]}; do
             # Compile the sketch with the defined option and internal oscillator settings
-            arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build_$colour led-nimator.ino
+            arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build led-nimator.ino
             # Rename the HEX file based on the configuration option
-            mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
+            mv ./build/led-nimator.ino.hex ./build/led-nimator_minicore_$colour.hex
           done
           
       - name: List Output Directory 
-        run: ls -R ./build_*
+        run: ls -R ./build
 
       - name: Upload HEX Files to GitHub
         uses: actions/upload-artifact@v4
         with:
           name: HEX Files
-          path: ./build_*/*.hex
+          path: ./build/*.hex
           
       - name: List Output Directory 
-        run: ls -R ./build_*
+        run: ls -R ./build
       
       - name: Download HEX Files
         uses: actions/download-artifact@v4
@@ -73,6 +83,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          draft: true
           tag_name: ${{ env.tag }}
           name: "Release ${{ env.tag }}"
           body: "HEX auto generated from action worklows."

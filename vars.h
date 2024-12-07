@@ -1,6 +1,3 @@
-#include <OneButton.h>
-#include <EasyColor.h>
-
 OneButton bpd2(BPD2, true);
 #ifdef BPD3
 OneButton bpd3(BPD3, true);
@@ -25,9 +22,6 @@ byte Colour[3] = { RD, GR, BL };
 /*
   LED Object Initialisation
 */
-#ifndef Adafruit_NeoPixel.h
-#include <Adafruit_NeoPixel.h>
-#endif
 
 Adafruit_NeoPixel Lled = Adafruit_NeoPixel(IntLEDT + ExtLED, Lpin, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel Rled = Adafruit_NeoPixel(IntLEDT + ExtLED, Rpin, NEO_GRBW + NEO_KHZ800);
@@ -51,7 +45,6 @@ int rainbowCycles = 0;
 #define MICINPUT_CEILING 500  //Max range of analogRead input, the lower the value the more sensitive (1023 = max)
 
 #else
-#include <VolAnalyzer.h>
 VolAnalyzer LanalyzeL(leftCh);
 VolAnalyzer RanalyzeR(rightCh);
 VolAnalyzer ManalyzeM(micCh);
