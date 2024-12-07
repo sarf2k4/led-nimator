@@ -21,14 +21,12 @@ jobs:
       - name: Install MiniCore Package
         run: |
           arduino-cli core install MiniCore:avr --additional-urls https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json
-
       - name: Install Libraries
         run: |
           arduino-cli lib install "OneButton"
           arduino-cli lib install "EasyColor"
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
-
       - name: Compile Configurations
         run: |
           COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
@@ -38,56 +36,44 @@ jobs:
             # Rename the HEX file based on the configuration option
             mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
           done
-
-      - name: List Output Directory
-        run: |
-          echo "Listing output directory contents:"
-          ls -R ./build
+          
+      - name: List Output Directory 
+        run: ls -R ./build_*
 
       - name: Upload HEX Files to GitHub
-        uses: actions/upload-artifact@v4  # Use the latest version of upload-artifact
+        uses: actions/upload-artifact@v4
         with:
           name: HEX Files
-          path: ./build_*/led-nimator_*.hex  # Path to the HEX files
-          retention-days: 1  # Set retention period for artifacts
+          path: ./build_*/*.hex
           
-  download_and_commit:
+      - name: List Output Directory 
+        run: ls -R ./build_*
+
+  list_artifacts:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code 
         uses: actions/checkout@v4
-
+      
       - name: Download HEX Files
         uses: actions/download-artifact@v4
         with:
           name: HEX Files
-          path: ./artifacts
+          path: ./download
 
-      - name: List Output Directory
-        run: |
-          echo "Listing output directory contents:"
-          ls -R ./artifacts
+      - name: List Downloaded Artifact Directory
+        run: ls -R ./download
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+        uses: elgohr/Github-Release-Action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: release-
-          release_name: elease
-          body: Automated release of HEX files for different configurations.
-          draft: false
+          tag_name: ${{ github.sha }}
+          release_name: "Release ${{ github.sha }}"
+          body: "Automated release of HEX files for different configurations."
+          draft: true
           prerelease: false
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/**/*.hex
-          asset_name: blink_$(date +%Y%m%d%H%M%S).hex
-          asset_content_type: application/octet-stream
+          files: ./download/**/*.hex
