@@ -79,3 +79,5 @@ jobs:
           files: ./download/**/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+        
