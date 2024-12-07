@@ -60,7 +60,7 @@ jobs:
 
       - name: Exclude bootloader.hex
         run: |
-          find ./download -name "bootloader.hex" -exec rm -f {} \;
+          find ./download/**/ -name "bootloader.hex" -exec rm -f {} \;
 
       - name: List Downloaded Artifact Directory
         run: ls -R ./download
