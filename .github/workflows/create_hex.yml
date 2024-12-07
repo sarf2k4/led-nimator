@@ -56,7 +56,6 @@ jobs:
         with:
           name: HEX Files
           path: ./download
-          if-no-files-found: ignore
 
       - name: Exclude bootloader.hex
         run: |
@@ -79,5 +78,4 @@ jobs:
           files: ./download/**/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #continue-on-error: true
         
