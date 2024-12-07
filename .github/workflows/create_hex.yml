@@ -49,11 +49,6 @@ jobs:
       - name: List Output Directory 
         run: ls -R ./build_*
 
-  list_artifacts:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Checkout code 
         uses: actions/checkout@v4
       
@@ -66,21 +61,10 @@ jobs:
       - name: List Downloaded Artifact Directory
         run: ls -R ./download
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh
-
-      - name: Create Git Tag
+      - name: Create Tag
         id: create_tag
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
           tag="v$(date +%Y%m%d%H%M%S)"
-          git tag $tag
-          git push origin $tag
           echo "::set-output name=tag::$tag"
 
       - name: Create Release
