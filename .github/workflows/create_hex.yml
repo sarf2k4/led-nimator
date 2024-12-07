@@ -18,37 +18,32 @@ jobs:
       - name: Update Arduino CLI Core Index
         run: arduino-cli core update-index
 
-      - name: Install MiniCore Package
+      - name: Install Board Package
         run: |
           arduino-cli core install arduino:avr
           arduino-cli core install MiniCore:avr --additional-urls https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json
           
-      - name: Install Libraries
+      - name: Install Required Libraries
         run: |
           arduino-cli lib install "OneButton"
           arduino-cli lib install "EasyColor"
           arduino-cli lib install "Adafruit NeoPixel"
           arduino-cli lib install "VolAnalyzer"
           
-      # - name: Compile UNO Board
-        # run: |
-          # COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
-          # for colour in ${COLOURS[@]}; do
-          # done
-          
-      - name: Compile Minicore
+      - name: Compile Hex
         run: |
           COLOURS=("PINK" "YELLOW" "BLUE" "CUSTOM")
           for colour in ${COLOURS[@]}; do
-            # Compile the sketch with the defined option and internal oscillator settings
+            # Compile UNO board
+            arduino-cli compile --fqbn arduino:avr:uno  --build-property build.extra_flags=-D$colour --output-dir ./build led-nimator.ino
+            # Repopulate the config files
+            mv ./build/led-nimator.ino.hex ./build/led-nimator_uno_$colour.hex
+
+            # Compile minicore board with internal oscillator
             arduino-cli compile --fqbn MiniCore:avr:328:clock=8MHz_internal  --build-property build.extra_flags=-D$colour --output-dir ./build led-nimator.ino
-            # Rename the HEX file based on the configuration option
+            # Repopulate the config files
             mv ./build/led-nimator.ino.hex ./build/led-nimator_minicore_$colour.hex
             
-            # Compile the sketch with the defined option and internal oscillator settings
-            arduino-cli compile --fqbn arduino:avr:uno  --build-property build.extra_flags=-D$colour --output-dir ./build led-nimator.ino
-            # Rename the HEX file based on the configuration option
-            mv ./build/led-nimator.ino.hex ./build/led-nimator_uno_$colour.hex
           done
           
       - name: List Output Directory 

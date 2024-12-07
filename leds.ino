@@ -241,8 +241,7 @@ void Pulses(int Pmd) {
     }
   }
 #else
-  if ((unsigned long)(millis() - previousFadeMillis) >= fadeInterval) {
-    previousFadeMillis = millis();
+  if (fadeDelay.update()) {
     if (AltMode) {
       for (int i = 0; i < (ExtLED / 2); i++) {
         int pixelHue = runningHue + (i * 65536L / (ExtLED / 2));

@@ -131,3 +131,6 @@ long runningHue = 0, firstHue = 0;
 long const finalHue = 65536L;
 long const startHueF = 2978, endHueF = 30247;
 long const startHueB = 23125, endHueB = 65536L;
+
+// nodelay parameters
+noDelay fadeDelay(fadeInterval);
