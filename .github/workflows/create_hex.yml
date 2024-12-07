@@ -69,6 +69,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ needs.build_and_release.outputs.tag }}
+          name: "Release $(date +%Y-%m-%d %H:%M:%S)"
           files: ./downloaded/**/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
