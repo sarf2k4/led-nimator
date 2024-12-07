@@ -9,6 +9,13 @@
 #endif
 
 void setup() {
+
+#ifdef USE_EEPROM
+  // eepromCheck();
+  EEPROM.get(0, ledMode);
+  EEPROM.get(1, ledpwr);
+  EEPROM.get(2, AltMode);
+#endif
 // Serial.begin(9600);
 
 // if (F_CPU == 16000000)
@@ -86,18 +93,13 @@ void setup() {
   ColorTest(COLOUR_WIPE_DELAYS);
 #endif
 #ifdef COLOUR_WIPE_STARTUP
-  ColorWipe(Colour[0], Colour[1], Colour[2], COLOUR_WIPE_DELAYS);
+  wipeAnim(Colour[0], Colour[1], Colour[2], AltMode == 1 ? AltMode : 2, 10);
+  if (!ledpwr)
+    wipeAnim(Colour[0], Colour[1], Colour[2], ledpwr, 5);
 #endif
 #if defined(EXTRA_MODES) && !defined(ARDUINO_AVR_DIGISPARKPRO)
   LMeteor1.changeColor(Colour[0], Colour[1], Colour[2]);
   LMeteor2.changeColor(Colour[0], Colour[1], Colour[2]);
-#endif
-
-#ifdef USE_EEPROM
-  // eepromCheck();
-  EEPROM.get(0, ledMode);
-  EEPROM.get(1, ledpwr);
-  EEPROM.get(2, AltMode);
 #endif
 
   setVol();
@@ -109,10 +111,6 @@ void loop() {
   bpd2.tick();
 #ifdef BPD3
   bpd3.tick();
-#endif
-
-#ifdef SEIZURE_INDUCER
-  RandColour();
 #endif
 
 #ifdef TP1
@@ -206,6 +204,9 @@ void MultiClicks(int clicks) {
         break;
       case 5:  // Colour wipe test
         ColorTest(10);
+        break;
+      case 10:  // Seizure Inducer
+        ledMode = 29;
         break;
     }
   }
