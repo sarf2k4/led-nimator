@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Check out the repository code
+        uses: actions/checkout@v2  # Check out the repository code
 
       - name: Set up Arduino CLI
         uses: arduino/setup-arduino-cli@v2
@@ -38,59 +38,44 @@ jobs:
             # Rename the HEX file based on the configuration option
             mv ./build_$colour/led-nimator.ino.hex ./build_$colour/led-nimator_$colour.hex
           done
-          
-      - name: List Output Directory 
-        run: ls -R ./build_*
+
+      - name: List Output Directory
+        run: |
+          echo "Listing output directory contents:"
+          ls -R ./build
 
       - name: Upload HEX Files to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Use the latest version of upload-artifact
         with:
           name: HEX Files
-          path: ./build_*/*.hex
+          path: ./build_*/led-nimator_*.hex  # Path to the HEX files
+          retention-days: 1  # Set retention period for artifacts
           
-      - name: List Output Directory 
-        run: ls -R ./build_*
-
-  list_artifacts:
+  download_and_commit:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code 
+      - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Download HEX Files
         uses: actions/download-artifact@v4
         with:
           name: HEX Files
-          path: ./download
+          path: ./artifacts
 
-      - name: List Downloaded Artifact Directory
-        run: ls -R ./download
-
-      - name: Display Exact File Paths for Release
+      - name: List Output Directory
         run: |
-          echo "Exact file paths for release:"
-          find ./download -type f -name "*.hex"
+          echo "Listing output directory contents:"
+          ls -R ./artifacts
 
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: "Release ${{ github.sha }}"
-          body: "Automated release of HEX files for different configurations."
-          draft: true
-          prerelease: false
-
-      - name: Upload Release Assets
-        uses: alexellis/upload-assets@0.4.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          asset_paths: ./downloaded/**/*.hex
-          repo: ${{ github.repository }}
-          tag: ${{ github.sha }}
-          target: ${{ github.sha }}
-
+      - name: Commit and Push HEX Files
+        run: |
+          mkdir -p hex_files
+          cp ./artifacts/**/*.hex ./hex_files/
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add ./hex_files/*.hex
+          git commit -m "Add HEX files"
+          git push origin HEAD:${{ github.ref }}
