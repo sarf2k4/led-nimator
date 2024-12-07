@@ -89,5 +89,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/**/*.hex
-          asset_name: *$(date +%Y%m%d%H%M%S).hex
+          asset_name: blink_$(date +%Y%m%d%H%M%S).hex
           asset_content_type: application/octet-stream
