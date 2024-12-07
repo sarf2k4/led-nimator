@@ -69,7 +69,7 @@ jobs:
 
       - name: Exclude bootloader.hex
         run: |
-          find ./download/**/ -name "*bootloader.hex" -exec rm -f {} \;
+          find ./download/ -name "*bootloader.hex" -exec rm -f {} \;
 
       - name: List Downloaded Artifact Directory
         run: ls -R ./download
@@ -87,7 +87,7 @@ jobs:
           tag_name: ${{ env.tag }}
           name: "Release ${{ env.tag }}"
           body: "HEX auto generated from action worklows."
-          files: ./download/**/*.hex
+          files: ./download/*.hex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
